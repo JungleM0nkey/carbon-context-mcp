@@ -1,0 +1,131 @@
+<evaluation>
+  <!--
+    31 realistic questions an agent should be able to answer using only the carbon-mcp tools.
+    Each answer is verifiable from the bundled data (tokens.json / components.json / charts.json /
+    ai-chat.json / labs.json / themes-resolved.json / scraped-index.json / storybook-index.json / references/).
+  -->
+  <qa_pair>
+    <question>Using carbon_token_lookup, what is the pixel value of $spacing-05?</question>
+    <answer>16px</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the line-height of the body-01 type token?</question>
+    <answer>20px</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Name the four core Carbon themes (carbon_list themes).</question>
+    <answer>white, g10, g90, g100</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Which Carbon theme has the global background #161616?</question>
+    <answer>Gray 100 (g100)</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What does Dropdown's onChange handler receive (carbon_component dropdown)?</question>
+    <answer>An object { selectedItem }, not a DOM event.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>For the DataTable component, what is special about the rows exposed inside the render prop?</question>
+    <answer>They are transformed — each has a .cells array — and are not the raw rows; you must spread getRowProps/getHeaderProps/getTableProps and every raw row needs a unique id.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the productive 'standard' motion easing curve?</question>
+    <answer>cubic-bezier(0.2, 0, 0.38, 0.9)</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>How many columns does the Carbon 2x Grid have at the lg breakpoint, and at what px width does lg start?</question>
+    <answer>16 columns, starting at 1056px.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>According to carbon_guidelines, how should depth/elevation be expressed in Carbon?</question>
+    <answer>With layer tokens ($layer-01/02/03), not drop shadows — Carbon surfaces are flat.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the default CSS class prefix in Carbon v11 (carbon_docs_search for 'prefix')?</question>
+    <answer>cds (e.g. .cds--btn). bx-- is the v10 prefix.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_token_lookup, what hex does $support-error resolve to in the g100 theme?</question>
+    <answer>#fa4d56</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What hex is $text-primary in the white theme vs the g100 theme?</question>
+    <answer>white: #161616 ; g100: #f4f4f4</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_docs_search scoped to data-table, what feature lets a user open all collapsed sections at once?</question>
+    <answer>Batch expansion (added to the table column header).</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_code_search, find the snippet that applies an app-wide theme in React.</question>
+    <answer>Wrap the app in &lt;GlobalTheme theme="..."&gt; from @carbon/react (with Theme for inline zones).</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_docs_search scoped to accessibility, are Carbon's interactive components keyboard operable?</question>
+    <answer>Yes — all interactive Carbon components are keyboard operable and ship managed focus/ARIA.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_code_search, find a canonical DataTable example with row selection.</question>
+    <answer>A Storybook-sourced DataTable selection story (source storybook/DataTable) using TableSelectRow/TableSelectAll via getSelectionProps in the render prop.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_code_search for 'import Dropdown', what's the import path?</question>
+    <answer>import { Dropdown } from '@carbon/react';</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_chart, which @carbon/charts component shows a part-to-whole with a total in the center, and where is the center label set?</question>
+    <answer>DonutChart — set options.donut.center.{label,number}. Import { DonutChart } from '@carbon/charts-react'.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_chart with intent 'trend over time', what chart types are recommended?</question>
+    <answer>LineChart (and AreaChart / StackedAreaChart) — with the bottom axis mapsTo 'date' and scaleType 'time'.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>In the Carbon Charts data model, what fields does a grouped bar chart row use and how do the axes know which is which?</question>
+    <answer>Flat rows { group, key, value }; options.axes.bottom.mapsTo='key' (scaleType 'labels') and axes.left.mapsTo='value'. Color is per group.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_chart, what's the right chart for a single KPI shown as a percentage of a target with an up/down delta?</question>
+    <answer>GaugeChart — data [{group:'value',value},{group:'delta',value}], options.gauge.{type:'semi',status}.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What CSS import is required to render @carbon/charts-react, and what is the SSR caveat in Next.js?</question>
+    <answer>import '@carbon/charts-react/dist/styles.css'; charts need window, so render them in a 'use client' file (or dynamic import with ssr:false).</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_ai_chat, how does an app built with @carbon/ai-chat send the assistant's reply back to the UI, and is it tied to watsonx?</question>
+    <answer>It is backend-agnostic (NOT a watsonx SDK). You implement messaging.customSendMessage(request, options, instance), call your own backend, then push the reply via instance.messaging.addMessage({ output: { generic: [{ response_type: 'text', text }] } }) — or addMessageChunk(...) for streaming.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_ai_chat, what CSS file must you import to style the @carbon/ai-chat widget?</question>
+    <answer>None — the chat renders in shadow DOM and self-injects Carbon tokens, so no CSS import is required. (@carbon/styles is optional, only for the host page; there is no @carbon/ai-chat/styles.css.)</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_ai_chat, how do you render your own React component inside an @carbon/ai-chat response?</question>
+    <answer>Emit a GenericItem with response_type 'user_defined' (payload in its user_defined field) from the backend, and pass renderUserDefinedResponse={(state, instance) => ReactNode} to &lt;ChatContainer&gt;.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_ai_chat, how do you set @carbon/ai-chat to the g100 dark theme, and what is the required peer dependency?</question>
+    <answer>Set injectCarbonTheme: CarbonTheme.G100 on PublicConfig (aiEnabled defaults to true for the Carbon AI styling). The required peer dependency is @carbon/web-components (&gt;=2.54).</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_ai_chat, how should @carbon/ai-chat be rendered in a Next.js App Router app?</question>
+    <answer>Client-only: mark the chat module 'use client' and load it with next/dynamic(() => import('./Chat'), { ssr: false }) — it needs window and custom elements, so it cannot render during SSR.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_labs, the design needs a force-directed graph of relationships between entities. Does core Carbon ship one, and what should I use?</question>
+    <answer>Core Carbon / @carbon/charts has no node-link graph. Use the experimental @carbon-labs/network-graph (a Lit web component). Install: npm i @carbon-labs/network-graph. It's 0.x — pin the version and confirm the API at labs.carbondesignsystem.com.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_labs, is @carbon-labs/ai-chat the same thing as @carbon/ai-chat?</question>
+    <answer>No. @carbon/ai-chat is the productized, framework-flexible chat (covered by carbon_ai_chat); @carbon-labs/ai-chat is an experimental Lit web component with built-in chart answers. Prefer @carbon/ai-chat for production.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using carbon_labs, I want a Carbon split/resizable panel layout in React — which labs package, and is anything deprecated?</question>
+    <answer>Use @carbon-labs/react-resizer. @carbon-labs/react-split-panel is DEPRECATED and superseded by react-resizer.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>According to carbon_labs, how stable are @carbon-labs/* packages and how should you depend on them?</question>
+    <answer>All are 0.x experimental and cut a minor on every PR merge to main, so they change fast — pin the exact version, expect breaking changes between minors, and verify the live API at the Storybook before using.</answer>
+  </qa_pair>
+</evaluation>

@@ -1,0 +1,20 @@
+# Keep the packed .mcpb lean (lesson from the bloated carbon-mcp-claude-extension.mcpb).
+# Pack runtime only: dist/, data/ (incl. model-cache + embeddings.bin), manifest.json,
+# package.json, and prod node_modules. Before packing: npm ci --omit=dev
+# NOTE: @xenova/transformers pulls onnxruntime (~250 MB in node_modules) for offline semantic
+# search. That is the bulk of a packed .mcpb. To ship a keyword-only build, drop
+# @xenova/transformers + data/{embeddings.bin,embeddings-meta.json,model-cache} — the server
+# auto-falls back to keyword search (mode: "keyword").
+src/
+scripts/
+data/source-raw/
+data/scraped/
+tsconfig.json
+.mcp.json
+.gitignore
+.mcpbignore
+evaluation.xml
+*.map
+node_modules/.cache/
+node_modules/typescript/
+node_modules/@types/

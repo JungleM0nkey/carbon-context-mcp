@@ -1,0 +1,40 @@
+{
+  "name": "carbon-context-mcp",
+  "version": "0.1.0",
+  "description": "Unofficial local MCP server for the IBM Carbon Design System (not affiliated with IBM). Offline docs/token/component lookup over a bundled reference pack. No network or token required.",
+  "type": "module",
+  "bin": {
+    "carbon-context-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "build:scraped": "node scripts/build-scraped.mjs",
+    "build:storybook": "node scripts/build-storybook.mjs",
+    "build:data": "npm run build:tokens && npm run build:scraped && npm run build:storybook",
+    "build:embeddings": "npm run build:data && npm run build && node scripts/build-embeddings.mjs",
+    "build:index": "npm run build:embeddings",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.2.0",
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,14 @@
+# Local Claude Code state (not for distribution)
+.remember/
+.claude/
+
+# Dependencies and build output
+node_modules/
+carbon-context-mcp/dist/
+carbon-context-mcp/node_modules/
+
+# Logs
+*.log
+
+# Prebuilt Claude Desktop extension — build from source or attach to a release
+*.mcpb

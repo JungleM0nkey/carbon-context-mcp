@@ -1,0 +1,289 @@
+{
+  "generatedFrom": "@carbon/charts-react — hand-authored chart catalog from carbon-design-system/carbon-charts source + docs (charts.carbondesignsystem.com). All 25 chart components.",
+  "docsBase": "https://charts.carbondesignsystem.com/",
+  "packages": {
+    "@carbon/charts": "Framework-agnostic core (D3-based) + plain styles. Peer dep: d3.",
+    "@carbon/charts-react": "React wrapper (PRIMARY). One component per chart type.",
+    "@carbon/charts-svelte": "Svelte wrapper.",
+    "@carbon/charts-vue": "Vue 3 wrapper.",
+    "@carbon/charts-angular": "Angular wrapper."
+  },
+  "setup": {
+    "install": "npm i @carbon/charts-react @carbon/charts d3",
+    "css": "import '@carbon/charts-react/styles.css';",
+    "scss": "@use '@carbon/charts/styles.scss';",
+    "ssr": "Charts need `window`; in Next.js App Router mark the file 'use client' (or dynamic import with { ssr:false }). They are client components.",
+    "note": "Each chart is `<XChart data={data} options={options} />`. `data` is a flat tabular array; `options` configures axes/theme/legend. Charts re-render on prop change."
+  },
+  "dataModel": "Carbon Charts use a FLAT TABULAR data array — one row per datum, not nested series. Common fields: `group` (the series/category, drives color + legend), `key` (the x-category for bar/labels), `value` (the measure), `date` (for time series). `options.axes.{left,bottom,right,top}.mapsTo` names which field an axis reads; `scaleType` is 'labels' | 'linear' | 'time' | 'log'. Color is assigned per `group`. Hierarchy/flow/geo charts use specialized shapes (children[], source/target, geo ids) — see each chart's dataShape.",
+  "themes": ["white", "g10", "g90", "g100"],
+  "scaleTypes": ["labels", "linear", "time", "log"],
+  "optionsReference": {
+    "title": "string — chart title (sentence case).",
+    "theme": "'white' | 'g10' | 'g90' | 'g100' — matches Carbon app theme.",
+    "height": "string e.g. '400px' — chart fills its container width; set an explicit height.",
+    "axes": "{ left|bottom|right|top: { mapsTo: <dataField>, scaleType?: 'labels'|'linear'|'time'|'log', title?: string, includeZero?: boolean, ticks?: {...} } }",
+    "color": "{ scale: { '<group>': '#hex' }, pairing: { option: 1-4 }, gradient?: {...} } — map series to Carbon categorical palette colors; prefer leaving default for accessible palettes.",
+    "legend": "{ enabled?: boolean, position?: 'top'|'bottom'|'left'|'right', alignment?: 'center'|'left'|'right', clickable?: boolean, truncation?: {...} }",
+    "tooltip": "{ enabled?, valueFormatter?(v,label), groupLabel?, showTotal?, customHTML?, alwaysShowRulerTooltip? }",
+    "toolbar": "{ enabled?: boolean, controls?: [...] } — export/zoom/make-fullscreen controls.",
+    "grid": "{ x?: { enabled? }, y?: { enabled? } }",
+    "zoomBar": "{ top: { enabled: true } } — brushable zoom for time series.",
+    "data": "{ loading?: boolean, groupMapsTo?: 'group', selectedGroups?: [] } — set loading:true to show the skeleton state.",
+    "donut": "{ center: { number?: number, label?: string }, alignment?: 'center' }",
+    "pie": "{ alignment?: 'center', labels?: { enabled? } }",
+    "gauge": "{ type?: 'full'|'semi', status?: 'danger'|'warning'|'success', showPercentageSymbol?: boolean, deltaArrow?: {...}, numberFormatter?(n) }",
+    "meter": "{ peak?: number, proportional?: {...}, status?: { ranges: [{ range:[min,max], status:'success'|'warning'|'danger' }] } }",
+    "bars": "{ width?, maxWidth? }",
+    "points": "{ radius?, filled?, enabled? } — for line/scatter point marks.",
+    "bubble": "{ radiusMapsTo?: <field>, radiusRange?: (min, max) => [number, number] }",
+    "heatmap": "{ colorLegend?: { title? }, divider?: {...} }",
+    "radar": "{ axes: { angle: <field>, value: <field> }, alignment?, xLabelPadding?, yTicks? }",
+    "comboChartTypes": "[{ type: 'simple-bar'|'stacked-bar'|'grouped-bar'|'line'|'area'|'scatter', correspondingDatasets: ['<group>', ...], options?: {} }]",
+    "tree": "{ type?: 'tree'|'dendrogram', rootTitle? }",
+    "alluvial": "{ nodes: [{ name }], nodePadding?, monochrome? }",
+    "wordCloud": "{ fontSizeMapsTo: <field>, wordMapsTo: <field>, fontSizeRange?: [min,max] }",
+    "geoData": "Choropleth: a topojson `Topology` passed via `options.geoData` (required). Each datum's `name` is matched against the feature's `properties.NAME`. There is no `thematic.mapsTo` — the color reads each datum's `value` automatically.",
+    "accessibility": "Built in: every chart ships a keyboard-navigable, screen-reader data view; patterns/redundant encodings for color-vision deficiency; tabular alternative. Always set a meaningful `title` and axis `title`s."
+  },
+  "families": [
+    { "family": "Comparison", "intent": "compare discrete categories or items side by side", "charts": ["SimpleBarChart", "GroupedBarChart", "StackedBarChart", "LollipopChart", "RadarChart"] },
+    { "family": "Trends over time", "intent": "show change/trend across a continuous time axis", "charts": ["LineChart", "AreaChart", "StackedAreaChart"] },
+    { "family": "Part-to-whole", "intent": "show composition / how parts sum to a whole", "charts": ["PieChart", "DonutChart", "StackedBarChart", "TreemapChart", "CirclePackChart"] },
+    { "family": "Correlation & distribution", "intent": "relationship between measures or spread of values", "charts": ["ScatterChart", "BubbleChart", "HistogramChart", "BoxplotChart", "HeatmapChart"] },
+    { "family": "Single value / KPI", "intent": "one headline number, progress to a target, or status", "charts": ["GaugeChart", "MeterChart", "BulletChart"] },
+    { "family": "Hierarchy & flow", "intent": "nested structure or flow between stages/nodes", "charts": ["TreeChart", "TreemapChart", "CirclePackChart", "AlluvialChart"] },
+    { "family": "Geospatial", "intent": "values across geographic regions", "charts": ["ChoroplethChart"] },
+    { "family": "Text", "intent": "term frequency / prominence", "charts": ["WordCloudChart"] },
+    { "family": "Composite", "intent": "combine multiple chart types on shared axes", "charts": ["ComboChart"] }
+  ],
+  "charts": [
+    {
+      "name": "SimpleBarChart", "aka": ["bar", "column", "bar chart"], "family": "Comparison",
+      "intent": "compare a single measure across discrete categories",
+      "tags": ["compare", "categories", "discrete", "ranking", "counts"],
+      "dataShape": "[{ group, value }]",
+      "when": "One series of categorical comparisons.",
+      "avoidWhen": "Many categories (>~12 → consider horizontal/lollipop) or part-to-whole (→ stacked/donut).",
+      "example": "import '@carbon/charts-react/styles.css';\nimport { SimpleBarChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Qty', value: 65000 },\n  { group: 'More', value: 29123 },\n  { group: 'Sold', value: 35213 },\n  { group: 'Restocking', value: 51213 },\n  { group: 'Misc', value: 16932 },\n];\nconst options = {\n  title: 'Simple bar (discrete)',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    left: { mapsTo: 'value' },\n    bottom: { mapsTo: 'group', scaleType: 'labels' },\n  },\n};\n\nexport const Demo = () => <SimpleBarChart data={data} options={options} />;"
+    },
+    {
+      "name": "GroupedBarChart", "aka": ["grouped bar", "clustered bar"], "family": "Comparison",
+      "intent": "compare multiple series across the same categories, bars side by side",
+      "tags": ["compare", "multi-series", "grouped", "clustered"],
+      "dataShape": "[{ group, key, value }]  // group=series (color), key=category",
+      "when": "Compare 2–4 series per category.",
+      "avoidWhen": "Composition/totals matter more than per-series values (→ stacked).",
+      "example": "import { GroupedBarChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', key: 'Qty', value: 65000 },\n  { group: 'Dataset 1', key: 'More', value: 29123 },\n  { group: 'Dataset 2', key: 'Qty', value: 32432 },\n  { group: 'Dataset 2', key: 'More', value: 21312 },\n];\nconst options = {\n  title: 'Grouped bar',\n  theme: 'g100',\n  height: '400px',\n  axes: {\n    left: { mapsTo: 'value' },\n    bottom: { mapsTo: 'key', scaleType: 'labels' },\n  },\n};\n\nexport const Demo = () => <GroupedBarChart data={data} options={options} />;"
+    },
+    {
+      "name": "StackedBarChart", "aka": ["stacked bar", "100% stacked"], "family": "Part-to-whole",
+      "intent": "show composition within each category and totals across categories",
+      "tags": ["stacked", "composition", "part-to-whole", "totals"],
+      "dataShape": "[{ group, key, value }]  // segments=group, category=key",
+      "when": "Part-to-whole per category, or totals comparison.",
+      "avoidWhen": "Precise per-segment comparison across categories (→ grouped/line).",
+      "example": "import { StackedBarChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', key: 'Q1', value: 34200 },\n  { group: 'Dataset 2', key: 'Q1', value: 56000 },\n  { group: 'Dataset 1', key: 'Q2', value: 29800 },\n  { group: 'Dataset 2', key: 'Q2', value: 47800 },\n];\nconst options = {\n  title: 'Stacked bar',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    left: { mapsTo: 'value', stacked: true },\n    bottom: { mapsTo: 'key', scaleType: 'labels' },\n  },\n};\n\nexport const Demo = () => <StackedBarChart data={data} options={options} />;"
+    },
+    {
+      "name": "LineChart", "aka": ["line", "time series", "trend"], "family": "Trends over time",
+      "intent": "trend of one or more series over a continuous (usually time) axis",
+      "tags": ["trend", "time-series", "line", "over time", "continuous"],
+      "dataShape": "[{ group, date, value }]  // or { group, key, value } for categorical x",
+      "when": "Continuous change; comparing trends of a few series.",
+      "avoidWhen": "Few discrete categories (→ bar) or part-to-whole (→ area/stacked).",
+      "example": "import { LineChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', date: '2023-01-01', value: 10000 },\n  { group: 'Dataset 1', date: '2023-02-01', value: 65000 },\n  { group: 'Dataset 1', date: '2023-03-01', value: 30000 },\n  { group: 'Dataset 2', date: '2023-01-01', value: 20000 },\n  { group: 'Dataset 2', date: '2023-02-01', value: 25000 },\n  { group: 'Dataset 2', date: '2023-03-01', value: 60000 },\n];\nconst options = {\n  title: 'Line (time series)',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'date', scaleType: 'time' },\n    left: { mapsTo: 'value', title: 'Conversion rate' },\n  },\n};\n\nexport const Demo = () => <LineChart data={data} options={options} />;"
+    },
+    {
+      "name": "AreaChart", "aka": ["area"], "family": "Trends over time",
+      "intent": "trend over time with emphasis on magnitude/volume under the line",
+      "tags": ["area", "trend", "time-series", "volume"],
+      "dataShape": "[{ group, date, value }]",
+      "when": "A single series' magnitude over time.",
+      "avoidWhen": "Many overlapping series (→ line, or stacked-area for composition).",
+      "example": "import { AreaChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', date: '2023-01-01', value: 10000 },\n  { group: 'Dataset 1', date: '2023-02-01', value: 65000 },\n  { group: 'Dataset 1', date: '2023-03-01', value: 30000 },\n];\nconst options = {\n  title: 'Area',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'date', scaleType: 'time' },\n    left: { mapsTo: 'value' },\n  },\n};\n\nexport const Demo = () => <AreaChart data={data} options={options} />;"
+    },
+    {
+      "name": "StackedAreaChart", "aka": ["stacked area"], "family": "Trends over time",
+      "intent": "composition over time — how series stack into a total trend",
+      "tags": ["stacked-area", "composition", "time-series", "part-to-whole over time"],
+      "dataShape": "[{ group, date, value }]",
+      "when": "Part-to-whole evolving over time.",
+      "avoidWhen": "Need exact per-series values (→ line).",
+      "example": "import { StackedAreaChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'A', date: '2023-01-01', value: 10000 },\n  { group: 'B', date: '2023-01-01', value: 20000 },\n  { group: 'A', date: '2023-02-01', value: 30000 },\n  { group: 'B', date: '2023-02-01', value: 25000 },\n];\nconst options = {\n  title: 'Stacked area',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'date', scaleType: 'time' },\n    left: { mapsTo: 'value', stacked: true },\n  },\n};\n\nexport const Demo = () => <StackedAreaChart data={data} options={options} />;"
+    },
+    {
+      "name": "ScatterChart", "aka": ["scatter", "scatterplot", "xy"], "family": "Correlation & distribution",
+      "intent": "relationship/correlation between two measures, points per datum",
+      "tags": ["scatter", "correlation", "xy", "relationship", "points"],
+      "dataShape": "[{ group, key, value }]  // categorical x; or two linear axes for numeric x/y",
+      "when": "Correlation between variables; clusters/outliers.",
+      "avoidWhen": "Trend over time (→ line).",
+      "example": "import { ScatterChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', key: 'Qty', value: 34200 },\n  { group: 'Dataset 1', key: 'More', value: 23500 },\n  { group: 'Dataset 2', key: 'Qty', value: 56000 },\n  { group: 'Dataset 2', key: 'More', value: 12300 },\n];\nconst options = {\n  title: 'Scatter',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'key', scaleType: 'labels' },\n    left: { mapsTo: 'value' },\n  },\n};\n\nexport const Demo = () => <ScatterChart data={data} options={options} />;"
+    },
+    {
+      "name": "BubbleChart", "aka": ["bubble"], "family": "Correlation & distribution",
+      "intent": "scatter with a third measure encoded as bubble size",
+      "tags": ["bubble", "scatter", "three-variable", "size", "correlation"],
+      "dataShape": "[{ group, key, value, surface }]  // surface drives radius",
+      "when": "Three numeric dimensions (x, y, magnitude).",
+      "avoidWhen": "Two dimensions suffice (→ scatter).",
+      "example": "import { BubbleChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Dataset 1', key: 32100, value: 41000, surface: 49500 },\n  { group: 'Dataset 1', key: 25100, value: 23000, surface: 36800 },\n  { group: 'Dataset 2', key: 41000, value: 39000, surface: 60000 },\n];\nconst options = {\n  title: 'Bubble',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'key', scaleType: 'linear' },\n    left: { mapsTo: 'value' },\n  },\n  bubble: { radiusMapsTo: 'surface' },\n};\n\nexport const Demo = () => <BubbleChart data={data} options={options} />;"
+    },
+    {
+      "name": "HistogramChart", "aka": ["histogram", "distribution"], "family": "Correlation & distribution",
+      "intent": "distribution of a continuous variable via auto-binned counts",
+      "tags": ["histogram", "distribution", "bins", "frequency"],
+      "dataShape": "[{ <numericField>, group }]  // chart bins the numeric field",
+      "when": "Shape/spread of one continuous variable.",
+      "avoidWhen": "Categorical counts (→ bar).",
+      "example": "import { HistogramChart } from '@carbon/charts-react';\n\nconst data = [\n  { age: 21, group: 'Cohort A' }, { age: 24, group: 'Cohort A' },\n  { age: 25, group: 'Cohort A' }, { age: 29, group: 'Cohort A' },\n  { age: 31, group: 'Cohort A' }, { age: 35, group: 'Cohort A' },\n];\nconst options = {\n  title: 'Histogram',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { title: 'Age', mapsTo: 'age', bins: 10, limitDomainToBins: true, scaleType: 'linear' },\n    left: { title: 'Count', scaleType: 'linear', stacked: true, binned: true },\n  },\n};\n\nexport const Demo = () => <HistogramChart data={data} options={options} />;"
+    },
+    {
+      "name": "BoxplotChart", "aka": ["boxplot", "box and whisker"], "family": "Correlation & distribution",
+      "intent": "distribution summary (quartiles, median, outliers) per category",
+      "tags": ["boxplot", "distribution", "quartiles", "median", "spread"],
+      "dataShape": "[{ group, key, value }]  // many rows per key; chart computes quartiles",
+      "when": "Compare distributions/spread across categories.",
+      "avoidWhen": "Just need a mean (→ bar).",
+      "example": "import { BoxplotChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Q1', key: 'Monday', value: 43000 },\n  { group: 'Q1', key: 'Monday', value: 65000 },\n  { group: 'Q1', key: 'Tuesday', value: 32000 },\n  { group: 'Q1', key: 'Tuesday', value: 51000 },\n];\nconst options = {\n  title: 'Boxplot',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { mapsTo: 'key', scaleType: 'labels' },\n    left: { mapsTo: 'value' },\n  },\n};\n\nexport const Demo = () => <BoxplotChart data={data} options={options} />;"
+    },
+    {
+      "name": "HeatmapChart", "aka": ["heatmap"], "family": "Correlation & distribution",
+      "intent": "value intensity across two categorical dimensions (color = magnitude)",
+      "tags": ["heatmap", "matrix", "two-dimensional", "intensity", "density"],
+      "dataShape": "[{ <xField>, <yField>, value }]  // two categorical axes + value",
+      "when": "Dense matrices: day×hour, category×category.",
+      "avoidWhen": "Few cells (→ table/bar).",
+      "example": "import { HeatmapChart } from '@carbon/charts-react';\n\nconst data = [\n  { day: 'Mon', hour: '9am', value: 10 },\n  { day: 'Mon', hour: '10am', value: 25 },\n  { day: 'Tue', hour: '9am', value: 5 },\n  { day: 'Tue', hour: '10am', value: 40 },\n];\nconst options = {\n  title: 'Heatmap',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    bottom: { title: 'Hour', mapsTo: 'hour', scaleType: 'labels' },\n    left: { title: 'Day', mapsTo: 'day', scaleType: 'labels' },\n  },\n  heatmap: { colorLegend: { title: 'Sessions' } },\n};\n\nexport const Demo = () => <HeatmapChart data={data} options={options} />;"
+    },
+    {
+      "name": "PieChart", "aka": ["pie"], "family": "Part-to-whole",
+      "intent": "composition of a whole across a few categories",
+      "tags": ["pie", "part-to-whole", "composition", "proportion"],
+      "dataShape": "[{ group, value }]",
+      "when": "≤ ~5 slices summing to a meaningful whole.",
+      "avoidWhen": "Many slices or precise comparison (→ bar/donut).",
+      "example": "import { PieChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Cloud', value: 20000 },\n  { group: 'On-prem', value: 65000 },\n  { group: 'Hybrid', value: 35000 },\n];\nconst options = { title: 'Pie', theme: 'white', height: '400px', resizable: true };\n\nexport const Demo = () => <PieChart data={data} options={options} />;"
+    },
+    {
+      "name": "DonutChart", "aka": ["donut", "doughnut"], "family": "Part-to-whole",
+      "intent": "part-to-whole with a headline total in the center",
+      "tags": ["donut", "part-to-whole", "composition", "center label", "kpi"],
+      "dataShape": "[{ group, value }]",
+      "when": "Composition + a central summary number.",
+      "avoidWhen": "Many slices or precise comparison (→ bar).",
+      "example": "import { DonutChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Cloud', value: 20000 },\n  { group: 'On-prem', value: 65000 },\n  { group: 'Hybrid', value: 35000 },\n];\nconst options = {\n  title: 'Donut',\n  theme: 'white',\n  height: '400px',\n  resizable: true,\n  donut: { center: { label: 'Total deals', number: 120000 } },\n};\n\nexport const Demo = () => <DonutChart data={data} options={options} />;"
+    },
+    {
+      "name": "GaugeChart", "aka": ["gauge"], "family": "Single value / KPI",
+      "intent": "progress toward 100% / a target with status and delta",
+      "tags": ["gauge", "kpi", "progress", "percentage", "status", "single value"],
+      "dataShape": "[{ group: 'value', value }, { group: 'delta', value }]",
+      "when": "One KPI as % of a target, with up/down delta.",
+      "avoidWhen": "Multiple metrics (→ meter/bullet/bar).",
+      "example": "import { GaugeChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'value', value: 42 },\n  { group: 'delta', value: -13.3 },\n];\nconst options = {\n  title: 'Gauge (semicircular)',\n  theme: 'white',\n  height: '250px',\n  resizable: true,\n  gauge: { type: 'semi', status: 'danger' },\n};\n\nexport const Demo = () => <GaugeChart data={data} options={options} />;"
+    },
+    {
+      "name": "MeterChart", "aka": ["meter", "progress bar"], "family": "Single value / KPI",
+      "intent": "single value against a peak/target as a thin horizontal meter",
+      "tags": ["meter", "kpi", "progress", "target", "status", "single value"],
+      "dataShape": "[{ group, value }]  // one or more rows; peak/status in options",
+      "when": "Compact KPI vs target (great in cards/tiles).",
+      "avoidWhen": "Need % of a circular target (→ gauge).",
+      "example": "import { MeterChart } from '@carbon/charts-react';\n\nconst data = [{ group: 'Storage used', value: 56 }];\nconst options = {\n  title: 'Storage',\n  theme: 'white',\n  height: '100px',\n  meter: {\n    peak: 100,\n    status: { ranges: [\n      { range: [0, 50], status: 'success' },\n      { range: [50, 80], status: 'warning' },\n      { range: [80, 100], status: 'danger' },\n    ] },\n  },\n};\n\nexport const Demo = () => <MeterChart data={data} options={options} />;"
+    },
+    {
+      "name": "BulletChart", "aka": ["bullet"], "family": "Single value / KPI",
+      "intent": "KPI vs target with qualitative ranges (compact dashboard metric)",
+      "tags": ["bullet", "kpi", "target", "ranges", "performance"],
+      "dataShape": "[{ title, ranges:[..], marker, value, group }]  // see docs for exact fields",
+      "when": "KPI vs target with good/ok/bad bands.",
+      "avoidWhen": "Simple value (→ meter).",
+      "docNote": "Bullet has a specialized datum (title/ranges/marker/value). Confirm exact fields at the docs site before shipping.",
+      "example": "import { BulletChart } from '@carbon/charts-react';\n\n// Confirm field names at charts.carbondesignsystem.com (Bullet).\nconst data = [\n  { title: 'Revenue', ranges: [50, 75, 100], marker: 80, value: 68, group: 'Q3' },\n];\nconst options = { title: 'Bullet', theme: 'white', height: '120px' };\n\nexport const Demo = () => <BulletChart data={data} options={options} />;"
+    },
+    {
+      "name": "LollipopChart", "aka": ["lollipop"], "family": "Comparison",
+      "intent": "ranked categorical comparison with a lighter ink-to-data ratio than bars",
+      "tags": ["lollipop", "compare", "ranking", "categories"],
+      "dataShape": "[{ group, value }]",
+      "when": "Ranked categories where bars feel heavy.",
+      "avoidWhen": "Precise small differences (→ bar).",
+      "example": "import { LollipopChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Qty', value: 65000 },\n  { group: 'More', value: 29123 },\n  { group: 'Sold', value: 35213 },\n];\nconst options = {\n  title: 'Lollipop',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    left: { mapsTo: 'value' },\n    bottom: { mapsTo: 'group', scaleType: 'labels' },\n  },\n};\n\nexport const Demo = () => <LollipopChart data={data} options={options} />;"
+    },
+    {
+      "name": "RadarChart", "aka": ["radar", "spider", "star"], "family": "Comparison",
+      "intent": "compare several series across multiple shared metrics (axes)",
+      "tags": ["radar", "spider", "multivariate", "compare", "profile"],
+      "dataShape": "[{ <groupField>, <featureField>, <valueField> }]",
+      "when": "Profile comparison across 3–8 metrics.",
+      "avoidWhen": "Precise reading matters (radar distorts area).",
+      "example": "import { RadarChart } from '@carbon/charts-react';\n\nconst data = [\n  { product: 'A', feature: 'Price', score: 60 },\n  { product: 'A', feature: 'Usability', score: 90 },\n  { product: 'A', feature: 'Performance', score: 75 },\n  { product: 'B', feature: 'Price', score: 80 },\n  { product: 'B', feature: 'Usability', score: 70 },\n  { product: 'B', feature: 'Performance', score: 85 },\n];\nconst options = {\n  title: 'Radar',\n  theme: 'white',\n  height: '400px',\n  radar: { axes: { angle: 'feature', value: 'score' } },\n  data: { groupMapsTo: 'product' },\n};\n\nexport const Demo = () => <RadarChart data={data} options={options} />;"
+    },
+    {
+      "name": "ComboChart", "aka": ["combo", "combined", "dual axis"], "family": "Composite",
+      "intent": "overlay multiple chart types (e.g. bars + line) on shared axes",
+      "tags": ["combo", "dual-axis", "bars and line", "composite"],
+      "dataShape": "[{ group, key, value }]  // assign each group to a chart type via comboChartTypes",
+      "when": "Two related measures with different visual encodings.",
+      "avoidWhen": "One encoding suffices (keep it simple).",
+      "example": "import { ComboChart } from '@carbon/charts-react';\n\nconst data = [\n  { group: 'Sales', key: 'Q1', value: 34200 },\n  { group: 'Sales', key: 'Q2', value: 29800 },\n  { group: 'Growth', key: 'Q1', value: 20 },\n  { group: 'Growth', key: 'Q2', value: 35 },\n];\nconst options = {\n  title: 'Combo (bar + line)',\n  theme: 'white',\n  height: '400px',\n  axes: {\n    left: { mapsTo: 'value' },\n    bottom: { mapsTo: 'key', scaleType: 'labels' },\n    right: { mapsTo: 'value', correspondingDatasets: ['Growth'] },\n  },\n  comboChartTypes: [\n    { type: 'stacked-bar', correspondingDatasets: ['Sales'] },\n    { type: 'line', correspondingDatasets: ['Growth'] },\n  ],\n};\n\nexport const Demo = () => <ComboChart data={data} options={options} />;"
+    },
+    {
+      "name": "TreemapChart", "aka": ["treemap"], "family": "Hierarchy & flow",
+      "intent": "hierarchical part-to-whole via nested area-proportional rectangles",
+      "tags": ["treemap", "hierarchy", "nested", "part-to-whole", "proportion"],
+      "dataShape": "[{ name, children: [{ name, value }] }]  // nested hierarchy",
+      "when": "Hierarchy where leaf magnitude matters and space is tight.",
+      "avoidWhen": "Flat categories (→ bar).",
+      "example": "import { TreemapChart } from '@carbon/charts-react';\n\nconst data = [\n  { name: 'Origins', children: [\n    { name: 'Asia', children: [ { name: 'China', value: 100 }, { name: 'India', value: 80 } ] },\n    { name: 'Europe', children: [ { name: 'Germany', value: 40 }, { name: 'France', value: 30 } ] },\n  ] },\n];\nconst options = { title: 'Treemap', theme: 'white', height: '400px' };\n\nexport const Demo = () => <TreemapChart data={data} options={options} />;"
+    },
+    {
+      "name": "CirclePackChart", "aka": ["circle pack", "circle packing", "bubble hierarchy"], "family": "Hierarchy & flow",
+      "intent": "hierarchical grouping via nested circles",
+      "tags": ["circle pack", "hierarchy", "nested", "grouping"],
+      "dataShape": "[{ name, children: [{ name, value }] }]  // nested hierarchy",
+      "when": "Show grouping/containment of hierarchical items.",
+      "avoidWhen": "Precise value reading (→ treemap/bar).",
+      "example": "import { CirclePackChart } from '@carbon/charts-react';\n\nconst data = [\n  { name: 'Cloud', children: [ { name: 'Compute', value: 60 }, { name: 'Storage', value: 40 } ] },\n  { name: 'Edge', children: [ { name: 'Gateways', value: 25 } ] },\n];\nconst options = { title: 'Circle pack', theme: 'white', height: '400px' };\n\nexport const Demo = () => <CirclePackChart data={data} options={options} />;"
+    },
+    {
+      "name": "TreeChart", "aka": ["tree", "dendrogram", "org chart"], "family": "Hierarchy & flow",
+      "intent": "node-link hierarchy (tree or dendrogram)",
+      "tags": ["tree", "dendrogram", "hierarchy", "node-link", "org chart"],
+      "dataShape": "{ name, children: [{ name, children: [...] }] }  // single root object",
+      "when": "Explicit parent→child structure.",
+      "avoidWhen": "Magnitude comparison (→ treemap).",
+      "example": "import { TreeChart } from '@carbon/charts-react';\n\nconst data = {\n  name: 'Root',\n  children: [\n    { name: 'Branch A', children: [ { name: 'Leaf 1' }, { name: 'Leaf 2' } ] },\n    { name: 'Branch B', children: [ { name: 'Leaf 3' } ] },\n  ],\n};\nconst options = { title: 'Tree', theme: 'white', height: '400px', tree: { type: 'tree' } };\n\nexport const Demo = () => <TreeChart data={data} options={options} />;"
+    },
+    {
+      "name": "AlluvialChart", "aka": ["alluvial", "sankey", "flow"], "family": "Hierarchy & flow",
+      "intent": "flow/quantity moving between stages or categories",
+      "tags": ["alluvial", "sankey", "flow", "transitions", "source target"],
+      "dataShape": "[{ source, target, value }]  // plus options.alluvial.nodes",
+      "when": "Multi-stage flows, conversions, transfers.",
+      "avoidWhen": "Simple breakdowns (→ stacked bar).",
+      "example": "import { AlluvialChart } from '@carbon/charts-react';\n\nconst data = [\n  { source: 'Visitors', target: 'Signups', value: 5000 },\n  { source: 'Signups', target: 'Paid', value: 1200 },\n  { source: 'Signups', target: 'Churned', value: 3800 },\n];\nconst options = {\n  title: 'Alluvial',\n  theme: 'white',\n  height: '400px',\n  alluvial: { nodes: [ { name: 'Visitors' }, { name: 'Signups' }, { name: 'Paid' }, { name: 'Churned' } ] },\n};\n\nexport const Demo = () => <AlluvialChart data={data} options={options} />;"
+    },
+    {
+      "name": "ChoroplethChart", "aka": ["choropleth", "map", "geo"], "family": "Geospatial",
+      "intent": "encode a value per geographic region by fill color",
+      "tags": ["choropleth", "map", "geo", "geospatial", "regions"],
+      "dataShape": "[{ name, value }]  // `name` must match the topology feature properties.NAME; needs options.geoData (topojson)",
+      "when": "Regional comparison on a map.",
+      "avoidWhen": "Non-geographic categories (→ bar/heatmap).",
+      "docNote": "Requires a topojson `options.geoData` (Topology). Each datum's `name` is matched to the feature's `properties.NAME`. There is no `thematic.mapsTo` — color reads `value` automatically. See the docs site for the geoData wiring.",
+      "example": "import { ChoroplethChart } from '@carbon/charts-react';\n// import worldTopo from './world.topo.json'; // a topojson Topology\n\nconst data = [\n  { name: 'United States', value: 320 },  // `name` must match feature.properties.NAME\n  { name: 'Brazil', value: 210 },\n];\nconst options = {\n  title: 'Choropleth',\n  theme: 'white',\n  height: '480px',\n  // geoData: worldTopo,                    // required: the topojson Topology\n  thematic: { projection: 'geoNaturalEarth1' },\n  choropleth: { colorLegend: { title: 'Users' } },\n};\n\nexport const Demo = () => <ChoroplethChart data={data} options={options} />;"
+    },
+    {
+      "name": "WordCloudChart", "aka": ["word cloud", "tag cloud"], "family": "Text",
+      "intent": "term prominence by frequency (font size encodes value)",
+      "tags": ["word cloud", "text", "frequency", "tags", "terms"],
+      "dataShape": "[{ word, value, group }]  // + options.wordCloud mapping",
+      "when": "Quick qualitative sense of frequent terms.",
+      "avoidWhen": "Precise comparison (→ bar).",
+      "example": "import { WordCloudChart } from '@carbon/charts-react';\n\nconst data = [\n  { word: 'design', value: 90, group: 'A' },\n  { word: 'tokens', value: 60, group: 'A' },\n  { word: 'accessibility', value: 45, group: 'B' },\n];\nconst options = {\n  title: 'Word cloud',\n  theme: 'white',\n  height: '400px',\n  wordCloud: { fontSizeMapsTo: 'value', wordMapsTo: 'word' },\n};\n\nexport const Demo = () => <WordCloudChart data={data} options={options} />;"
+    }
+  ]
+}

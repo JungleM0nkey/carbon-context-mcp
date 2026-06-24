@@ -1,0 +1,111 @@
+---
+title: Modal
+description:
+  Modals focus the user’s attention exclusively on one task or piece of
+  information via a window that sits on top of the page content.
+tabs: ['Usage', 'Style', 'Code', 'Accessibility']
+---
+
+import { Tag } from '@carbon/react';
+
+<PageDescription>
+
+Preview the modal component with the React live demo. For detailed code usage
+documentation, see the Storybooks for each framework below.
+
+</PageDescription>
+
+## Documentation
+
+<Row className="resource-card-group">
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+    subTitle="React"
+    href="https://react.carbondesignsystem.com/?path=/story/components-modal--default"
+    >
+
+<MdxIcon name="react" />
+<Tag type="blue">Feature flag</Tag>
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Web Components"
+      href="https://web-components.carbondesignsystem.com/?path=/story/components-modal--default"
+      >
+
+<MdxIcon name="webcomponents" />
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Angular (Community)"
+      href="https://angular.carbondesignsystem.com/?path=/story/components-modal--basic"
+      >
+
+<MdxIcon name="angular" />
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Vue (Community)"
+      href="http://vue.carbondesignsystem.com/?path=/story/components-cvmodal--default"
+      >
+
+<MdxIcon name="vue" />
+
+  </ResourceCard>
+</Column>
+</Row>
+
+### Feature flags
+
+A [feature flag](/components/overview/feature-flags/) has been added to modal to
+improve accessibility and changes parts of its functionality, not its visual
+appearance. For more code-specific feature flag information, refer to the
+[@carbon/react](https://react.carbondesignsystem.com/?path=/docs/components-modal-feature-flag--flag-details)
+framework. Once the next major release (v12) is released in the future, this
+feature flag will become the default version of the component.
+
+The `enable-focus-wrap-without-sentinels` flag is a new approach to focus wrap
+behavior, modifying the DOM to no longer include hidden "sentinel nodes" that
+previously marked the beginning and end of the wrapped focus. This behavior
+considers all interactive child nodes and wraps focus based on their tab order.
+
+## Live demo
+
+<StorybookDemo
+  themeSelector
+  url="https://react.carbondesignsystem.com"
+  tall
+  wide
+  variants={[
+    {
+      label: 'Default',
+      variant: 'components-modal--default',
+    },
+    {
+      label: 'Danger modal',
+      variant: 'components-modal--danger-modal',
+    },
+    {
+      label: 'Full width',
+      variant: 'components-modal--full-width',
+    },
+    {
+      label: 'Passive modal',
+      variant: 'components-modal--passive-modal',
+    },
+    {
+      label: 'With state manager',
+      variant: 'components-modal--with-state-manager',
+    },
+    {
+      label: 'With AI label',
+      variant: 'components-modal--with-ai-label',
+    },
+  ]}
+/>

@@ -1,0 +1,143 @@
+---
+title: Tile
+description:
+  Tiles are a flexible component for displaying a wide variety of content,
+  including informational, getting started, how-to, next steps, and more.
+tabs: ['Usage', 'Style', 'Code', 'Accessibility']
+---
+
+import { CheckmarkFilled } from '@carbon/icons-react';
+import { Tag } from '@carbon/react';
+
+<PageDescription>
+
+Preview the tile component with the React live demo. For detailed code usage
+documentation, see the Storybooks for each framework below.
+
+</PageDescription>
+
+## Documentation
+
+<Row className="resource-card-group">
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+    subTitle="React"
+    href="https://react.carbondesignsystem.com/?path=/story/components-tile--default"
+    >
+
+<MdxIcon name="react" />
+<Tag type="blue">Feature flag</Tag>
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Web Components"
+      href="https://web-components.carbondesignsystem.com/?path=/story/components-tile--default"
+      >
+
+<MdxIcon name="webcomponents" />
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Angular (Community)"
+      href="https://angular.carbondesignsystem.com/?path=/story/components-tiles--basic"
+      >
+
+<MdxIcon name="angular" />
+
+  </ResourceCard>
+</Column>
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+      subTitle="Vue (Community)"
+      href="http://vue.carbondesignsystem.com/?path=/story/components-cvtile--default"
+      >
+
+<MdxIcon name="vue" />
+
+  </ResourceCard>
+</Column>
+</Row>
+
+### Feature flags
+
+[Feature flags](/components/overview/feature-flags/) have been added to the
+clickable, selectable, and expandable variants of tile to improve accessibility
+and changes its visual appearance, not its functionality. For more code-specific
+feature flag information, refer to the
+[@carbon/react](https://react.carbondesignsystem.com/?path=/docs/components-tile-feature-flag--flag-details)
+framework. Once the next major release (v12) is released in the future, these
+feature flags will become the default version of the component.
+
+- The `enable-tile-contrast` flag adds a border to the tile with improved
+  contrast for accessibility and to visually indicate they are operable.
+- The `enable-v12-tile-default-icons` flag enables the rendering of default
+  icons on the clickable variant of a tile, such as the ArrowRight icon for
+  navigation or the Error icon when the tile is disabled. If the user hasn't
+  configured a different icon, these defaults will be used.
+- The `enable-v12-tile-radio-icons` flag changes RadioTile to use radio button
+  icons instead of a checkmark icons.
+
+## Live demo
+
+<StorybookDemo
+  themeSelector
+  url="https://react.carbondesignsystem.com"
+  variants={[
+    {
+      label: 'Default',
+      variant: 'components-tile--default',
+    },
+    {
+      label: 'Clickable',
+      variant: 'components-tile--clickable',
+    },
+    {
+      label: 'Expandable',
+      variant: 'components-tile--expandable',
+    },
+    {
+      label: 'Expandable with interactive',
+      variant: 'components-tile--expandable-with-interactive',
+    },
+    {
+      label: 'Multiselect',
+      variant: 'components-tile--multi-select',
+    },
+    {
+      label: 'Radio',
+      variant: 'components-tile--radio',
+    },
+    {
+      label: 'Selectable',
+      variant: 'components-tile--selectable',
+    },
+    {
+      label: 'Clickable with improved contrast (preview)',
+      variant: 'components-tile-feature-flag--clickable',
+    },
+    {
+      label: 'Expandable with improved contrast (preview)',
+      variant: 'components-tile-feature-flag--expandable',
+    },
+    {
+      label: 'Multiselect with improved contrast (preview)',
+      variant: 'components-tile-feature-flag--multi-select',
+    },
+    {
+      label: 'Radio with improved contrast (preview)',
+      variant: 'components-tile-feature-flag--radio',
+    },
+    {
+      label: 'Selectable with improved contrast (preview)',
+      variant: 'components-tile-feature-flag--selectable',
+    },
+    {
+      label: 'With AI label',
+      variant: 'components-tile--with-ai-label',
+    },
+  ]}
+/>

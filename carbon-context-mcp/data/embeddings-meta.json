@@ -1,0 +1,10 @@
+{
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "dim": 384,
+  "quantized": true,
+  "nDocs": 2213,
+  "nCode": 608,
+  "total": 2821,
+  "fingerprint": "db0685dad49cff1a9e134a987690f945bbe93f93d1eb0175d216a219a1d2bc78",
+  "note": "Row i in embeddings.bin pairs with docChunks()[i] for i<nDocs, else codeCorpus()[i-nDocs]. Rebuild after any corpus change."
+}

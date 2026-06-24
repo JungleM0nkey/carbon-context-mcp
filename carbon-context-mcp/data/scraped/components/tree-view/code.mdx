@@ -1,0 +1,71 @@
+---
+title: Tree view
+description:
+  A tree view is a hierarchical structure that provides nested levels of
+  navigation.
+tabs: ['Usage', 'Style', 'Code', 'Accessibility']
+---
+
+import { Tag } from '@carbon/react';
+
+<PageDescription>
+
+Preview the tree view component with the React live demo. For detailed code
+usage documentation, see the Storybooks for each framework below.
+
+</PageDescription>
+
+## Documentation
+
+<Row className="resource-card-group">
+<Column colLg={4} colMd={4} noGutterSm>
+  <ResourceCard
+    subTitle="React"
+    href="https://react.carbondesignsystem.com/?path=/story/components-treeview--default&globals=theme:white"
+    >
+
+<MdxIcon name="react" />
+<Tag type="blue">Feature flag</Tag>
+
+  </ResourceCard>
+</Column>
+</Row>
+
+### Feature flags
+
+A [feature flag](/components/overview/feature-flags/) has been added to tree
+view to improve accessibility and changes parts of its functionality, not its
+visual appearance. For more code-specific feature flag information, refer to the
+[@carbon/react](https://react.carbondesignsystem.com/?path=/docs/components-treeview-feature-flag--flag-details)
+framework. Once the next major release (v12) is released in the future, this
+feature flag will become the default version of the component.
+
+The `enable-treeview-controllable` flag allows synchronizing the state
+of `selected` and `active` with the application and is a new controllable API of
+TreeView.
+
+## Live demo
+
+<StorybookDemo
+  themeSelector
+  tall
+  url="https://react.carbondesignsystem.com"
+  variants={[
+    {
+      label: 'Default',
+      variant: 'components-treeview--default',
+    },
+    {
+      label: 'With controlled expansion',
+      variant: 'components-treeview--with-controlled-expansion',
+    },
+    {
+      label: 'With icons',
+      variant: 'components-treeview--with-icons',
+    },
+    {
+      label: 'With links',
+      variant: 'components-treeview--with-links',
+    },
+  ]}
+/>

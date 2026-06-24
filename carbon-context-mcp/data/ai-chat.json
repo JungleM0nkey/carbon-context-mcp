@@ -1,0 +1,228 @@
+{
+  "generatedFrom": "github.com/carbon-design-system/carbon-ai-chat @carbon/ai-chat v1.15.0 — facts verified against src TypeScript types on main (PublicConfig.ts, MessagingConfig.ts, Messages.ts, ChatInstance.ts, eventBusTypes.ts, component/ChatContainer.ts) and the examples/ apps.",
+  "package": "@carbon/ai-chat",
+  "version": "1.15.0",
+  "license": "Apache-2.0",
+  "docsBase": "https://chat.carbondesignsystem.com/tag/latest/docs/documents/Overview.html",
+  "repo": "https://github.com/carbon-design-system/carbon-ai-chat",
+  "summary": "@carbon/ai-chat is IBM Carbon's front-end chat framework — an opinionated, extensible chat UI shipped in BOTH React (<ChatContainer>, <ChatCustomElement>) and web-component (<cds-aichat-container>, <cds-aichat-custom-element>) forms from one ESM-only package. It is BACKEND-AGNOSTIC: you own the LLM/server call inside a messaging.customSendMessage callback and push responses back through the ChatInstance. It is NOT hardwired to watsonx (the watsonx avatar/name is just an overridable default). It renders in shadow DOM and self-injects Carbon theme tokens, so there is no mandatory CSS import.",
+  "packages": {
+    "@carbon/ai-chat": "v1.15.0 — the published chat framework (React + web components). ESM-only (\"type\":\"module\").",
+    "@carbon/ai-chat-components": "v1.5.0 — lower-level Carbon-compliant chat building-block components for composing/extending your own widget."
+  },
+  "peerDeps": {
+    "@carbon/web-components": ">=2.54.0 <3.0.0 (REQUIRED peer — the web-component build is the foundation; install it alongside)",
+    "react": ">=17.0.0 <20.0.0 (peer — React 17/18/19; there is an examples/react/react-17 app)",
+    "react-dom": ">=17.0.0 <20.0.0 (peer)"
+  },
+  "setup": {
+    "install": "npm install @carbon/ai-chat @carbon/web-components",
+    "reactImport": "import { ChatContainer, ChatCustomElement, type PublicConfig, type ChatInstance, CarbonTheme, MessageResponseTypes, BusEventType } from '@carbon/ai-chat';",
+    "webComponentImport": "import '@carbon/ai-chat/dist/es/web-components/cds-aichat-container/index.js'; // side-effect: registers <cds-aichat-container>. Types/enums still import from '@carbon/ai-chat'.",
+    "css": "No CSS import is required for the chat itself — it renders in shadow DOM and injects its own Carbon tokens. (Optional: import '@carbon/styles/css/styles.css' to give the HOST PAGE IBM Plex + reset; that is the separate @carbon/styles package, not @carbon/ai-chat.) The only conditional stylesheet from this package is '@carbon/ai-chat/css/chat-float-layout.css', and only if you hand-apply float classes to ChatCustomElement (ChatContainer wires it for you).",
+    "esm": "ESM-only package (\"type\":\"module\", no CommonJS main). Your bundler must handle ESM.",
+    "node": "Repo dev toolchain pins Node 24.15.0 (.nvmrc); the package declares no consumer engines floor.",
+    "nextjs": "Client-only: the chat touches window + custom elements. Mark the module 'use client' AND load it with next/dynamic(() => import('./Chat'), { ssr: false }). Pattern is from examples/react/next (Next.js App Router).",
+    "configIdentity": "Re-creating the config object on every render restarts the chat (deep-equal diff). Define config outside render or memoize messaging/handlers."
+  },
+  "themes": ["white", "g10", "g90", "g100"],
+  "responseTypeNames": ["text", "option", "button", "card", "carousel", "grid", "image", "video", "audio", "iframe", "date", "user_defined", "conversational_search", "connect_to_agent", "pause", "inline_error", "preview_card", "system"],
+  "configFields": [
+    { "field": "messaging", "type": "PublicConfigMessaging", "purpose": "The backend wiring: customSendMessage (receive user turn), customLoadHistory, messageTimeoutSecs (default 150; 0=never), skipWelcome, showStopButtonImmediately. THE field you must set." },
+    { "field": "injectCarbonTheme", "type": "CarbonTheme", "purpose": "Force a theme: CarbonTheme.WHITE | G10 | G90 | G100. If unset, the chat inherits the host page's Carbon theme (falls back to WHITE / dark-by-background)." },
+    { "field": "aiEnabled", "type": "boolean", "purpose": "Carbon AI theme styling (the AI gradient/AI label treatment). Defaults to true." },
+    { "field": "header", "type": "HeaderConfig", "purpose": "Header title/behavior/menu." },
+    { "field": "launcher", "type": "LauncherConfig", "purpose": "The floating launcher button (ChatContainer)." },
+    { "field": "homescreen", "type": "HomeScreenConfig", "purpose": "Pre-conversation homescreen (greeting, starter prompts)." },
+    { "field": "layout", "type": "LayoutConfig", "purpose": "customProperties (--cds-aichat-* sizing tokens) + corners (CornersType.ROUND|SQUARE)." },
+    { "field": "input", "type": "InputConfig", "purpose": "maxInputCharacters, isVisible, isDisabled." },
+    { "field": "history", "type": "HistoryConfig", "purpose": "Conversation history behavior (pair with messaging.customLoadHistory)." },
+    { "field": "disclaimer", "type": "DisclaimerPublicConfig", "purpose": "{ isOn, disclaimerHTML } shown before first use." },
+    { "field": "openChatByDefault", "type": "boolean", "purpose": "Open the chat on load instead of showing only the launcher." },
+    { "field": "isReadonly", "type": "boolean", "purpose": "Render a transcript with no input." },
+    { "field": "namespace", "type": "string", "purpose": "(<=30 chars) Disambiguate multiple chat instances on one page." },
+    { "field": "assistantName", "type": "string", "purpose": "Display name (default 'watsonx' — override it)." },
+    { "field": "assistantAvatarUrl", "type": "string", "purpose": "Override the default Watsonx avatar." },
+    { "field": "locale", "type": "string", "purpose": "ICU locale, e.g. 'en', 'fr'." },
+    { "field": "strings", "type": "DeepPartial<LanguagePack>", "purpose": "Override built-in UI strings." },
+    { "field": "shouldSanitizeHTML", "type": "boolean", "purpose": "Sanitize HTML in text responses." },
+    { "field": "serviceDeskFactory", "type": "(params) => Promise<ServiceDesk>", "purpose": "Human-agent handoff: return your ServiceDesk implementation." },
+    { "field": "serviceDesk", "type": "ServiceDeskPublicConfig", "purpose": "Handoff tuning: availabilityTimeoutSeconds, agentJoinTimeoutSeconds, allowReconnect." },
+    { "field": "upload", "type": "UploadConfig", "purpose": "(experimental) File upload: is_on, accept, maxFiles, onFileUpload." },
+    { "field": "markdown", "type": "PublicConfigMarkdown", "purpose": "(experimental) markdown-it plugins / custom renderers." },
+    { "field": "onError", "type": "(data: OnErrorData) => void", "purpose": "Error hook (OnErrorType: MESSAGE_COMMUNICATION | RENDER | INTEGRATION_ERROR | HYDRATION)." }
+  ],
+  "events": [
+    "pre:receive / receive — a MessageResponse is about to be / was rendered (event.data: MessageResponse).",
+    "pre:send / send — a user MessageRequest is about to be / was sent.",
+    "view:pre:change / view:change — chat opening/closing (BusEventViewChange.cancelViewChange to veto).",
+    "chat:ready — the instance has finished initializing.",
+    "state:change — PublicChatState changed (see examples/react/watch-state).",
+    "userDefinedResponse / chunk:userDefinedResponse — fill a user_defined slot (web-component / event path).",
+    "feedback — thumbs up/down on a response (FeedbackInteractionType).",
+    "stopStreaming — user pressed the stop-streaming button.",
+    "history:begin / history:end / history:newChat — history lifecycle.",
+    "restartConversation / pre:restartConversation — conversation reset.",
+    "human_agent:pre:receive / human_agent:receive / human_agent:pre:send / human_agent:send / human_agent:pre:startChat / human_agent:pre:endChat / human_agent:endChat — service-desk lifecycle."
+  ],
+  "instanceApi": {
+    "obtain": "React: pass onBeforeRender={(chat) => setInstance(chat)} to <ChatContainer>. Web component: set .onBeforeRender on the element.",
+    "messaging.addMessage": "(message: MessageResponse) => Promise<void> — push a complete (non-streamed) bot response.",
+    "messaging.addMessageChunk": "(chunk: StreamChunk) => Promise<void> — stream a response; chunk is PartialItemChunk {partial_item} | CompleteItemChunk {complete_item} | FinalResponseChunk {final_response}, merged by streaming_metadata.id.",
+    "messaging.removeMessages / clearConversation / insertHistory / restartConversation": "transcript management.",
+    "send": "(message: MessageRequest | string, options?: { silent?: boolean }) => Promise<void> — programmatically send a turn.",
+    "changeView": "(view: ViewType | ViewState) => Promise<void> — ViewType.LAUNCHER | MAIN_WINDOW.",
+    "on / off / once": "({ type: BusEventType, handler }) => EventHandlers — subscribe to the event bus.",
+    "getState": "() => PublicChatState — immutable snapshot (activeResponseId, input, loading counters, humanAgent, customPanels).",
+    "customPanels.getPanel": "(panel?: PanelType) => CustomPanelInstance with .open(options?)/.close().",
+    "writeableElements": "Partial<WriteableElements> — HTMLElements for HEADER_BOTTOM, BEFORE_INPUT, AFTER_INPUT, WELCOME_NODE_BEFORE, FOOTER, etc. React: feed via renderWriteableElements prop.",
+    "serviceDesk": "ChatInstanceServiceDeskActions — endConversation(), updateIsSuspended(isSuspended)."
+  },
+  "antiPatterns": [
+    "Treating it like a watsonx Assistant SDK. It is NOT — there is no built-in assistant API. You implement messaging.customSendMessage and call your own backend/LLM, then instance.messaging.addMessage(...). The watsonx name/avatar are overridable defaults only.",
+    "Importing a CSS file to 'fix' unstyled chat. The chat is in shadow DOM and self-injects Carbon tokens; @carbon/styles is for the host page, not the widget. Don't invent '@carbon/ai-chat/styles.css'.",
+    "Rendering it during SSR. It needs window + custom elements — in Next.js use 'use client' + next/dynamic({ssr:false}), or it throws on the server.",
+    "Re-creating the config/messaging object inline in render. The deep-equal diff restarts the chat. Define config/handlers outside render or memoize them.",
+    "Forgetting the @carbon/web-components peer dependency (>=2.54). The chat is built on it; missing it breaks the build.",
+    "Hand-rolling rich content as raw HTML strings. Use the typed GenericItem response types (card, carousel, button, grid, conversational_search) or a user_defined item with renderUserDefinedResponse for your own React — don't bypass the model.",
+    "Hardcoding colors to theme the widget. Force a theme with injectCarbonTheme and recolor the shell via --cds-aichat-* / --cds-* custom properties, not literal hex.",
+    "Building a custom 'talk to a human' flow from scratch. Use serviceDeskFactory + the ServiceDesk interface (startChat/sendMessageToAgent/endChat) and the human_agent:* events."
+  ],
+  "topics": [
+    {
+      "topic": "setup",
+      "aka": ["install", "getting started", "import", "quickstart", "css", "stylesheet"],
+      "summary": "Install @carbon/ai-chat (+ the @carbon/web-components peer), import ChatContainer, give it a PublicConfig with messaging.customSendMessage. No CSS import needed (shadow DOM self-injects tokens).",
+      "detail": "ESM-only. React: <ChatContainer {...config} /> or the sized <ChatCustomElement className=... />. Web component: side-effect import the cds-aichat-container entry and use <cds-aichat-container .messaging=${...} .onBeforeRender=${...}>. The only optional stylesheet is @carbon/ai-chat/css/chat-float-layout.css for manual float layout.",
+      "example": "import { ChatContainer, type PublicConfig } from '@carbon/ai-chat';\nimport { createRoot } from 'react-dom/client';\nimport { customSendMessage } from './customSendMessage';\n\nconst config: PublicConfig = {\n  messaging: { customSendMessage },\n};\n\nfunction App() {\n  return <ChatContainer {...config} />;\n}\n\ncreateRoot(document.querySelector('#root')!).render(<App />);"
+    },
+    {
+      "topic": "messaging",
+      "aka": ["customSendMessage", "backend", "send message", "respond", "addMessage", "wire up", "llm", "server"],
+      "summary": "You receive the user's turn in messaging.customSendMessage(request, options, instance) and reply by calling instance.messaging.addMessage(...) with a MessageResponse whose output.generic is an array of GenericItem. Backend-agnostic — call your own server/LLM here.",
+      "detail": "customSendMessage may be async; if it returns a Promise the widget queues later user messages until it resolves, and rejection shows an error. options.signal is an AbortSignal that fires on messageTimeoutSecs (default 150) or a stop press. Load prior turns with messaging.customLoadHistory(instance) => HistoryItem[].",
+      "example": "import { ChatInstance, CustomSendMessageOptions, MessageRequest, MessageResponseTypes } from '@carbon/ai-chat';\n\nexport async function customSendMessage(\n  request: MessageRequest,\n  options: CustomSendMessageOptions,\n  instance: ChatInstance,\n) {\n  const userText = request.input.text ?? '';\n  const reply = await callYourBackend(userText, { signal: options.signal });\n  instance.messaging.addMessage({\n    output: {\n      generic: [{ response_type: MessageResponseTypes.TEXT, text: reply }],\n    },\n  });\n}"
+    },
+    {
+      "topic": "streaming",
+      "aka": ["stream", "addMessageChunk", "token streaming", "partial", "chunk"],
+      "summary": "Stream a response with instance.messaging.addMessageChunk(chunk). Send PartialItemChunk {partial_item} pieces (merged by streaming_metadata.id), then a FinalResponseChunk {final_response} to finalize. CompleteItemChunk {complete_item} finalizes a single item.",
+      "detail": "Each item carries streaming_metadata { id, cancellable?, stream_stopped? }. The final_response.id must match streaming_metadata.response_id. MessageState is STREAMING | COMPLETE | ERROR. Honor options.signal (AbortSignal) to stop streaming.",
+      "example": "const responseId = 'r1';\nlet acc = '';\nfor await (const piece of yourTokenStream(userText, { signal: options.signal })) {\n  acc += piece;\n  await instance.messaging.addMessageChunk({\n    streaming_metadata: { response_id: responseId },\n    partial_item: {\n      response_type: MessageResponseTypes.TEXT,\n      text: acc,\n      streaming_metadata: { id: 'item-1' },\n    },\n  });\n}\nawait instance.messaging.addMessageChunk({\n  final_response: { id: responseId, output: { generic: [{ response_type: MessageResponseTypes.TEXT, text: acc }] } },\n});"
+    },
+    {
+      "topic": "responses",
+      "aka": ["response types", "generic items", "rich content", "cards", "buttons", "options", "message format"],
+      "summary": "A bot response is a MessageResponse with output.generic: GenericItem[]. Each item has a response_type (text, option, button, card, carousel, grid, conversational_search, image/video/audio, iframe, date, user_defined, connect_to_agent, …). Use the typed items rather than raw HTML.",
+      "detail": "Use carbon_ai_chat with responseType='<type>' to get the exact item interface and a snippet. text supports markdown; option renders buttons/dropdown; conversational_search is the RAG citation type; user_defined is your own React (see the user-defined topic).",
+      "example": "instance.messaging.addMessage({\n  output: {\n    generic: [\n      { response_type: MessageResponseTypes.TEXT, text: 'Pick one:' },\n      {\n        response_type: MessageResponseTypes.OPTION,\n        title: 'Options',\n        options: [\n          { label: 'Plans', value: { input: { text: 'show plans' } } },\n          { label: 'Pricing', value: { input: { text: 'show pricing' } } },\n        ],\n      },\n    ],\n  },\n});"
+    },
+    {
+      "topic": "user-defined",
+      "aka": ["custom response", "renderUserDefinedResponse", "user_defined", "custom react", "slot"],
+      "summary": "Render your own React inside a response: emit a GenericItem with response_type 'user_defined' (payload in its user_defined field) from the backend, and pass renderUserDefinedResponse to <ChatContainer> to return a ReactNode for it.",
+      "detail": "renderUserDefinedResponse(state, instance) => ReactNode, where state = { messageItem?, partialItems?, fullMessage?, state? (STREAMING|COMPLETE|ERROR) }. Web component: set .renderUserDefinedResponse returning an HTMLElement, or listen for BusEventType.USER_DEFINED_RESPONSE and fill the named slot.",
+      "example": "function renderUserDefinedResponse(state, _instance) {\n  const item = state.messageItem;\n  if (item?.user_defined?.kind === 'weather') {\n    return <WeatherCard data={item.user_defined.data} />;\n  }\n  return null;\n}\n\n<ChatContainer {...config} renderUserDefinedResponse={renderUserDefinedResponse} />;\n// backend side:\n// { response_type: MessageResponseTypes.USER_DEFINED, user_defined: { kind: 'weather', data } }"
+    },
+    {
+      "topic": "theming",
+      "aka": ["theme", "dark mode", "carbon theme", "colors", "g100", "ai gradient", "style"],
+      "summary": "Force a Carbon theme with injectCarbonTheme: CarbonTheme.WHITE|G10|G90|G100 (else it inherits the host page). aiEnabled (default true) controls the Carbon AI gradient styling. Recolor the shell via --cds-aichat-* and --cds-* CSS custom properties — never literal hex.",
+      "detail": "WHITE/G10 are light, G90/G100 dark. Carbon tokens (--cds-link-primary, --cds-button-primary, …) and chat-shell tokens (--cds-aichat-launcher-color-background, …) layer together.",
+      "example": "import { CarbonTheme, type PublicConfig } from '@carbon/ai-chat';\n\nconst config: PublicConfig = {\n  injectCarbonTheme: CarbonTheme.G100,\n  aiEnabled: true,\n  messaging: { customSendMessage },\n};"
+    },
+    {
+      "topic": "layout",
+      "aka": ["float", "fullscreen", "sidebar", "placement", "ChatCustomElement", "size", "corners"],
+      "summary": "Float vs full-area is a COMPONENT choice, not a flag. ChatContainer / <cds-aichat-container> = floating launcher + popover. ChatCustomElement / <cds-aichat-custom-element> = you size/place it via className (sidebar, fullscreen, nested). Tune sizing with layout.customProperties and layout.corners.",
+      "detail": "ChatCustomElement is 0x0 until opened; use its onViewChange/onViewPreChange props to set size and animate. layout.corners uses CornersType.ROUND|SQUARE (per-corner: startStart/startEnd/endStart/endEnd).",
+      "example": "import { ChatCustomElement, type PublicConfig } from '@carbon/ai-chat';\n\n<ChatCustomElement\n  {...config}\n  className=\"my-chat-sidebar\"\n  onViewChange={(event, instance) => {/* set size/animate */}}\n/>;\n// .my-chat-sidebar { position: fixed; inset: 0 0 0 auto; width: 380px; }"
+    },
+    {
+      "topic": "nextjs",
+      "aka": ["next", "ssr", "use client", "dynamic import", "server components", "hydration"],
+      "summary": "The chat is client-only (needs window + custom elements). In Next.js App Router, mark the chat module 'use client' and load it with next/dynamic({ ssr: false }) so it never renders on the server.",
+      "detail": "Pattern from examples/react/next. Also keep the config object stable (define outside render / memoize) so re-renders don't restart the chat.",
+      "example": "'use client';\nimport dynamic from 'next/dynamic';\n\nconst Chat = dynamic(() => import('@/components/Chat'), {\n  ssr: false,\n  loading: () => <p>Loading chat…</p>,\n});\n\nexport default function Page() {\n  return <Chat />;\n}"
+    },
+    {
+      "topic": "instance",
+      "aka": ["ChatInstance", "onBeforeRender", "api", "send", "changeView", "events", "on", "getState"],
+      "summary": "Capture the ChatInstance via onBeforeRender (React prop / web-component property). It exposes messaging.addMessage(Chunk), send(), changeView(), on/off/once(event bus), getState(), customPanels, writeableElements, and serviceDesk actions.",
+      "detail": "Subscribe to events with instance.on({ type: BusEventType.RECEIVE, handler }). Open/close programmatically with changeView(ViewType.MAIN_WINDOW). See the events topic for the BusEventType list.",
+      "example": "import { BusEventType, type ChatInstance } from '@carbon/ai-chat';\n\nfunction App() {\n  const onBeforeRender = (instance: ChatInstance) => {\n    instance.on({ type: BusEventType.RECEIVE, handler: (e) => console.log('bot said', e.data) });\n  };\n  return <ChatContainer {...config} onBeforeRender={onBeforeRender} />;\n}"
+    },
+    {
+      "topic": "events",
+      "aka": ["event bus", "BusEventType", "on", "subscribe", "listeners", "view change"],
+      "summary": "An event bus on the instance (on/off/once) with a BusEventType enum: pre:receive/receive, pre:send/send, view:pre:change/view:change, chat:ready, state:change, feedback, stopStreaming, history:*, restartConversation, and human_agent:* for service desk.",
+      "detail": "Handlers are (event, instance) => unknown (may be async; the bus awaits). view:pre:change can veto opening/closing via cancelViewChange. See examples/react/watch-state for state:change.",
+      "example": "instance.on({ type: BusEventType.VIEW_PRE_CHANGE, handler: (event) => {\n  if (!userAccepted) event.cancelViewChange = true;\n}});"
+    },
+    {
+      "topic": "service-desk",
+      "aka": ["human agent", "handoff", "live agent", "escalation", "serviceDeskFactory", "ServiceDesk"],
+      "summary": "Hand off to a human via serviceDeskFactory: (params) => Promise<ServiceDesk>. Implement the ServiceDesk interface (startChat, sendMessageToAgent, endChat, areAnyAgentsOnline?) and drive the UI through the provided ServiceDeskCallback (agentJoined, sendMessageToUser, agentTyping, agentEndedChat).",
+      "detail": "Emit a connect_to_agent response to offer the handoff. Tune with serviceDesk: { availabilityTimeoutSeconds, agentJoinTimeoutSeconds, allowReconnect }. Lifecycle is observable via human_agent:* events. See examples/{react,web-components}/human-agent.",
+      "example": "const config: PublicConfig = {\n  serviceDeskFactory: async ({ callback, instance }) => ({\n    getName: () => 'my-desk',\n    startChat: async (connectMessage, opts) => { /* open your desk session */ },\n    sendMessageToAgent: async (message, id) => { /* forward user msg */ },\n    endChat: async (info) => { /* tear down */ },\n  }),\n  messaging: { customSendMessage },\n};"
+    }
+  ],
+  "responseTypes": [
+    { "type": "text", "item": "TextItem", "fields": "text?: string (CommonMark + extensions; HTML allowed unless shouldSanitizeHTML)", "use": "Plain or markdown assistant text. The default response.", "example": "{ response_type: MessageResponseTypes.TEXT, text: 'Here is **markdown** text.' }" },
+    { "type": "option", "item": "OptionItem", "fields": "title?, description?, options: SingleOption[] ({ label, value: { input: { text } } }), preference?: 'dropdown'|'button'", "use": "Offer a small set of choices as buttons or a dropdown.", "example": "{ response_type: MessageResponseTypes.OPTION, title: 'Choose', options: [{ label: 'A', value: { input: { text: 'A' } } }] }" },
+    { "type": "button", "item": "ButtonItem", "fields": "label, button_type: 'post_back'|'custom_event'|'show_panel'|'url', kind?, value?.input?, url?", "use": "A single action button (send text, fire an event, open a panel, or link out).", "example": "{ response_type: MessageResponseTypes.BUTTON, label: 'Open docs', button_type: 'url', url: 'https://carbondesignsystem.com' }" },
+    { "type": "card", "item": "CardItem", "fields": "body?: GenericItem[], footer?: ButtonItem[], max_width?: 'small'|'medium'|'large' (CardItem = BaseGenericItem & WithBodyAndFooter & WithWidthOptions). NOTE: the field is 'body', NOT 'items'.", "use": "A bordered card grouping body content with an optional footer.", "example": "{ response_type: MessageResponseTypes.CARD, body: [{ response_type: MessageResponseTypes.TEXT, text: 'Card body' }], footer: [{ response_type: MessageResponseTypes.BUTTON, label: 'Open', button_type: 'url', url: 'https://example.com' }] }" },
+    { "type": "carousel", "item": "CarouselItem", "fields": "items: GenericItem[]", "use": "A horizontally swipeable set of items (typically cards).", "example": "{ response_type: MessageResponseTypes.CAROUSEL, items: [card1, card2, card3] }" },
+    { "type": "grid", "item": "GridItem", "fields": "columns, rows[].cells[].items: GenericItem[]", "use": "Arrange items in a grid of rows/cells.", "example": "{ response_type: MessageResponseTypes.GRID, rows: [{ cells: [{ items: [textItem] }] }] }" },
+    { "type": "image", "item": "MediaItem", "fields": "source, title?, alt_text?, file_accessibility?", "use": "Render an image (video/audio are the same MediaItem shape with their own response_type).", "example": "{ response_type: MessageResponseTypes.IMAGE, source: 'https://…/chart.png', alt_text: 'Quarterly chart' }" },
+    { "type": "video", "item": "MediaItem", "fields": "source, title?, alt_text?, file_accessibility? (same MediaItem shape as image)", "use": "Render a video player.", "example": "{ response_type: MessageResponseTypes.VIDEO, source: 'https://…/demo.mp4', title: 'Product demo' }" },
+    { "type": "audio", "item": "MediaItem", "fields": "source, title?, alt_text?, file_accessibility? (same MediaItem shape as image)", "use": "Render an audio player.", "example": "{ response_type: MessageResponseTypes.AUDIO, source: 'https://…/clip.mp3', title: 'Voicemail' }" },
+    { "type": "iframe", "item": "IFrameItem", "fields": "source, title?, display?: 'inline'|'panel'", "use": "Embed an external page inline or in a panel.", "example": "{ response_type: MessageResponseTypes.IFRAME, source: 'https://example.com', display: 'panel' }" },
+    { "type": "date", "item": "DateItem", "fields": "(date picker)", "use": "Prompt the user for a date.", "example": "{ response_type: MessageResponseTypes.DATE }" },
+    { "type": "user_defined", "item": "UserDefinedItem", "fields": "user_defined: your payload; full_width?: boolean", "use": "Render your OWN React/HTML via renderUserDefinedResponse (see the user-defined topic). The escape hatch for custom UI.", "example": "{ response_type: MessageResponseTypes.USER_DEFINED, user_defined: { kind: 'weather', data: {…} } }" },
+    { "type": "conversational_search", "item": "ConversationalSearchItem", "fields": "text, citations?, search_results?", "use": "RAG answer: generated text with source citations.", "example": "{ response_type: MessageResponseTypes.CONVERSATIONAL_SEARCH, text: 'Answer…', citations: [{ title, url }] }" },
+    { "type": "connect_to_agent", "item": "ConnectToHumanAgentItem", "fields": "agent_available?: { message }, agent_unavailable?: { message }, message_to_human_agent?, transfer_info?. NOTE: the enum MEMBER is MessageResponseTypes.CONNECT_TO_HUMAN_AGENT (string value 'connect_to_agent').", "use": "Offer/start a human-agent handoff (pairs with serviceDeskFactory).", "example": "{ response_type: MessageResponseTypes.CONNECT_TO_HUMAN_AGENT, agent_available: { message: 'Connecting you to an agent…' }, agent_unavailable: { message: 'No agents are available right now.' } }" },
+    { "type": "pause", "item": "PauseItem", "fields": "time?: number (ms), typing?: boolean", "use": "Insert a typing pause between items for pacing.", "example": "{ response_type: MessageResponseTypes.PAUSE, time: 1000, typing: true }" },
+    { "type": "inline_error", "item": "InlineErrorItem", "fields": "text?, debug?", "use": "Show an inline error within the transcript.", "example": "{ response_type: MessageResponseTypes.INLINE_ERROR, text: 'Something went wrong.' }" },
+    { "type": "system", "item": "SystemMessageItem", "fields": "title (required), variant?: 'default'|'date'|'agent'", "use": "A status/informational system line in the transcript (standalone if the only item, else inline).", "example": "{ response_type: MessageResponseTypes.SYSTEM, title: 'Conversation restarted' }" },
+    { "type": "preview_card", "item": "PreviewCardItem", "fields": "workspace_id (required), title?, subtitle?, workspace_options?, additional_data?", "use": "A card that opens an attached workspace panel.", "example": "{ response_type: MessageResponseTypes.PREVIEW_CARD, workspace_id: 'ws-123', title: 'Order #4821', subtitle: 'Open details' }" }
+  ],
+  "examples": [
+    {
+      "name": "react-basic",
+      "lang": "tsx",
+      "title": "Minimal React Carbon AI Chat (floating widget)",
+      "code": "import { ChatContainer, type PublicConfig } from '@carbon/ai-chat';\nimport { createRoot } from 'react-dom/client';\nimport { ChatInstance, CustomSendMessageOptions, MessageRequest, MessageResponseTypes } from '@carbon/ai-chat';\n\nasync function customSendMessage(request: MessageRequest, options: CustomSendMessageOptions, instance: ChatInstance) {\n  const text = await callYourBackend(request.input.text ?? '', { signal: options.signal });\n  instance.messaging.addMessage({ output: { generic: [{ response_type: MessageResponseTypes.TEXT, text }] } });\n}\n\nconst config: PublicConfig = { messaging: { customSendMessage } };\n\nfunction App() { return <ChatContainer {...config} />; }\ncreateRoot(document.querySelector('#root')!).render(<App />);"
+    },
+    {
+      "name": "react-streaming",
+      "lang": "tsx",
+      "title": "Streaming responses with addMessageChunk",
+      "code": "import { ChatInstance, CustomSendMessageOptions, MessageRequest, MessageResponseTypes } from '@carbon/ai-chat';\n\nexport async function customSendMessage(request: MessageRequest, options: CustomSendMessageOptions, instance: ChatInstance) {\n  const responseId = crypto.randomUUID();\n  let acc = '';\n  for await (const token of streamFromBackend(request.input.text ?? '', { signal: options.signal })) {\n    acc += token;\n    await instance.messaging.addMessageChunk({\n      streaming_metadata: { response_id: responseId },\n      partial_item: { response_type: MessageResponseTypes.TEXT, text: acc, streaming_metadata: { id: 'item-1' } },\n    });\n  }\n  await instance.messaging.addMessageChunk({\n    final_response: { id: responseId, output: { generic: [{ response_type: MessageResponseTypes.TEXT, text: acc }] } },\n  });\n}"
+    },
+    {
+      "name": "react-user-defined",
+      "lang": "tsx",
+      "title": "Custom React response via renderUserDefinedResponse",
+      "code": "import { ChatContainer, type PublicConfig, MessageResponseTypes } from '@carbon/ai-chat';\n\nfunction renderUserDefinedResponse(state, _instance) {\n  const item = state.messageItem;\n  if (item?.user_defined?.kind === 'weather') return <WeatherCard data={item.user_defined.data} />;\n  return null;\n}\n\nconst config: PublicConfig = {\n  messaging: { customSendMessage },\n};\n\n// backend emits: { response_type: MessageResponseTypes.USER_DEFINED, user_defined: { kind: 'weather', data } }\nexport default function App() {\n  return <ChatContainer {...config} renderUserDefinedResponse={renderUserDefinedResponse} />;\n}"
+    },
+    {
+      "name": "react-theme-sidebar",
+      "lang": "tsx",
+      "title": "Dark-theme sidebar with ChatCustomElement",
+      "code": "import { ChatCustomElement, CarbonTheme, type PublicConfig } from '@carbon/ai-chat';\n\nconst config: PublicConfig = {\n  injectCarbonTheme: CarbonTheme.G100,\n  aiEnabled: true,\n  messaging: { customSendMessage },\n};\n\nexport default function App() {\n  return <ChatCustomElement {...config} className=\"chat-sidebar\" />;\n}\n// .chat-sidebar { position: fixed; inset: 0 0 0 auto; width: 400px; }"
+    },
+    {
+      "name": "nextjs-client-only",
+      "lang": "tsx",
+      "title": "Next.js App Router (client-only, ssr:false)",
+      "code": "'use client';\nimport dynamic from 'next/dynamic';\n\nconst Chat = dynamic(() => import('@/components/Chat'), {\n  ssr: false,\n  loading: () => <p>Loading chat…</p>,\n});\n\nexport default function Page() {\n  return <Chat />;\n}\n// components/Chat.tsx starts with 'use client' and renders <ChatContainer {...config} />"
+    },
+    {
+      "name": "web-component-basic",
+      "lang": "ts",
+      "title": "Web component (Lit) usage",
+      "code": "import '@carbon/ai-chat/dist/es/web-components/cds-aichat-container/index.js';\nimport { type ChatInstance, type PublicConfig } from '@carbon/ai-chat';\nimport { html, LitElement } from 'lit';\nimport { customElement } from 'lit/decorators.js';\nimport { customSendMessage } from './customSendMessage';\n\nconst config: PublicConfig = { messaging: { customSendMessage } };\n\n@customElement('my-app')\nexport class Demo extends LitElement {\n  onBeforeRender = (instance: ChatInstance) => { /* capture instance */ };\n  render() {\n    return html`<cds-aichat-container .onBeforeRender=${this.onBeforeRender} .messaging=${config.messaging}></cds-aichat-container>`;\n  }\n}"
+    }
+  ]
+}

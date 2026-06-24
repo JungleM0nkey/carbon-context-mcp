@@ -1,0 +1,37 @@
+{
+  "manifest_version": "0.3",
+  "name": "carbon-context-mcp",
+  "display_name": "Carbon Context (unofficial, local)",
+  "version": "0.1.0",
+  "description": "Unofficial local MCP server for the IBM Carbon Design System (not affiliated with IBM). Offline docs/token/component lookup over a bundled reference pack. No network or token required.",
+  "author": {
+    "name": "Ilya Shevchenko"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"]
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  },
+  "tools": [
+    { "name": "carbon_docs_search", "description": "Full-text search across the bundled Carbon reference pack." },
+    { "name": "carbon_token_lookup", "description": "Structured design-token lookup (spacing/type/color/motion/grid/theme)." },
+    { "name": "carbon_component", "description": "@carbon/react component API, variants, rules, and example." },
+    { "name": "carbon_code_search", "description": "Hybrid (semantic + keyword) search over the bundled code corpus: Storybook snippets, @carbon/react imports, Sass/reference fences, chart examples, and curated examples." },
+    { "name": "carbon_chart", "description": "@carbon/charts data-viz: look up a chart by name or recommend by intent; returns component, data shape, options, and a runnable React example." },
+    { "name": "carbon_ai_chat", "description": "@carbon/ai-chat: build a Carbon AI chat UI. Topic/response-type lookup + setup, PublicConfig, messaging/streaming wiring, theming, and Next.js notes." },
+    { "name": "carbon_labs", "description": "@carbon-labs/* experimental incubation packages: look up by name or by a gap core Carbon lacks (with react/web-component filter); overview covers 0.x stability caveats and the @carbon/ai-chat vs @carbon-labs/ai-chat disambiguation." },
+    { "name": "carbon_list", "description": "Enumerate components/tokens/themes/patterns/packages/charts/ai-chat/labs." },
+    { "name": "carbon_guidelines", "description": "Carbon guidance + 'fake Carbon' anti-patterns for a topic." }
+  ],
+  "tools_generated": false
+}

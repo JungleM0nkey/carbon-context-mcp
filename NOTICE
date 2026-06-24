@@ -1,0 +1,15 @@
+ibm-carbon
+Copyright 2026 Ilya Shevchenko
+
+This product is an independent, unofficial project. It is not affiliated with,
+endorsed by, or sponsored by IBM. "IBM", "IBM Carbon", "Carbon Design System",
+and "IBM Plex" are trademarks of IBM Corp., used here only descriptively to
+identify the design system this tooling supports.
+
+This product includes materials developed by IBM as part of the Carbon Design
+System (https://github.com/carbon-design-system), Copyright IBM Corp., licensed
+under the Apache License, Version 2.0. It also bundles a machine-learning model
+(all-MiniLM-L6-v2) licensed under the Apache License, Version 2.0.
+
+See THIRD_PARTY_NOTICES.md for the full list of included third-party materials,
+their copyright owners, source URLs, and the modifications made to them.
